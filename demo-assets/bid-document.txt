@@ -1,0 +1,23 @@
+ಟೆಂಡರ್ ಬಿಡ್ ಡಾಕ್ಯುಮೆಂಟ್
+Tender Bid Document
+
+ಕಂಪನಿ: ರಾಜೇಶ್ ಇನ್ಫ್ರಾಸ್ಟ್ರಕ್ಚರ್ ಪ್ರೈ. ಲಿ.
+Company: Rajesh Infrastructure Pvt Ltd
+GSTIN: 29AACFR1234A1Z5
+
+ವಾರ್ಷಿಕ ವಹಿವಾಟು / Annual Turnover:
+FY2023: Rs.12.4 Crore
+FY2022: Rs.10.1 Crore
+FY2021: Rs.8.9 Crore
+
+ISO 9001:2015 ಪ್ರಮಾಣಪತ್ರ / Certificate: #IN-9001-2022-04471
+PWD ನೋಂದಣಿ / Registration: KA-PWD-I-2019-0034
+ಅನುಭವ / Experience: 7 ಯೋಜನೆಗಳು, ಸರಾಸರಿ 9.2 ವರ್ಷ
+
+ಒಟ್ಟು ಬಿಡ್ ಮೊತ್ತ / Total Bid Amount: Rs.44.2 Crore
+
+---
+
+PRINT THIS FILE AS PDF:
+  Chrome: Ctrl+P → Destination: Save as PDF → Save
+  Use the saved PDF for ALL upload fields in the demo.

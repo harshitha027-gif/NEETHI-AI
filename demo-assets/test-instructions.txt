@@ -1,0 +1,136 @@
+NEETHI AI — FULL TEST INSTRUCTIONS
+====================================
+
+BEFORE YOU START
+-----------------
+1. Open bid-document.txt in Chrome
+2. Press Ctrl+P → Destination: Save as PDF → Save as "bid-document.pdf"
+   Keep this PDF handy — use it for every upload field.
+3. Run the app:
+     cd neethi-ai
+     npm run dev
+4. Open http://localhost:5173
+
+
+FULL DEMO FLOW (5-10 min)
+==========================
+
+STEP 1 — Landing Page
+  URL:    http://localhost:5173/
+  Action: Click "Open Demo" or "Go to Dashboard"
+  Expect: Officer Dashboard loads with 3 evaluation cards
+
+
+STEP 2 — Start New Evaluation
+  URL:    http://localhost:5173/evaluation/new/step1
+  Action: Click "New Evaluation" on dashboard
+  Fill:
+    Tender Name  → NH-75 Bypass Road Construction
+    Reference No → KTPP-2024-INF-001
+    Upload PDF   → drag or click to upload bid-document.pdf
+  Click: "Next: Upload Bid Documents"
+  Expect: Moves to Step 2
+
+
+STEP 3 — Upload Bid Documents
+  URL:    http://localhost:5173/evaluation/new/step2
+  Action: Upload bid-document.pdf into EACH bidder card
+    - Hassan Infra card → upload bid-document.pdf
+    - Mysuru Urban card → upload bid-document.pdf
+  Optional: Click "+ Add Bidder", enter a name, upload PDF
+  Expect: "Continue to Review" button enables once all cards have a file
+  Click: "Continue to Review"
+
+
+STEP 4 — Confirm Criteria
+  URL:    http://localhost:5173/evaluation/new/step3
+  Action: Review the 6 criteria listed (no input needed)
+  Click: "Start Evaluation"
+  Expect: Redirects to /evaluation/EVAL-2024-001/processing
+
+
+STEP 5 — Processing Screen
+  URL:    http://localhost:5173/evaluation/EVAL-2024-001/processing
+  Expect: Animated progress bars
+  Click: "View Results" when it appears
+  Expect: Verdict Dashboard loads
+
+
+STEP 6 — Verdict Dashboard
+  URL:    http://localhost:5173/evaluation/EVAL-2024-001
+  Expect:
+    - 11 Eligible bids (green)
+    - 2 Ineligible bids (red)
+    - 1 Manual Review bid (amber)
+    - "Sign Off" button is DISABLED (manual review unresolved)
+    - Kannada vendor names visible under English names
+  Test eligible:   Click "View" on BID-001 row
+  Test ineligible: Click "View" on BID-012 row
+  Test manual:     Click "Resolve" on BID-014 row
+
+
+STEP 7 — Eligible Bid Detail
+  URL:    http://localhost:5173/bid/BID-001/eligible
+  Expect: All 6 criteria shown with green checkmarks and confidence scores
+  Click: "Approve Eligibility"
+  Expect: Returns to Verdict Dashboard
+
+
+STEP 8 — Ineligible Bid Detail
+  URL:    http://localhost:5173/bid/BID-012/ineligible
+  Expect: Fail reasons shown with document page citations
+  Options:
+    A) Click "Confirm Rejection" → back to Verdict Dashboard
+    B) Click "Send to Manual Review" → goes to /bid/BID-012/manual-review
+
+
+STEP 9 — Manual Review (REQUIRED to unlock Sign Off)
+  URL:    http://localhost:5173/bid/BID-014/manual-review
+  Fill:
+    Decision: click any radio button
+    Notes:    type at least 1 character (e.g. "Verified")
+  Click: "Submit Decision"
+  Expect:
+    - Returns to Verdict Dashboard
+    - BID-014 now shows "Resolved" badge
+    - "Sign Off" button NOW ENABLED
+
+
+STEP 10 — Sign Off
+  URL:    http://localhost:5173/evaluation/EVAL-2024-001/signoff
+  Action: Click "Sign Off" button on Verdict Dashboard
+  Fill:   Check the confirmation checkbox
+  Click:  "Sign Off & Lock Evaluation"
+  Expect: Returns to Verdict Dashboard, evaluation locked
+
+
+STEP 11 — Supporting Screens (bonus demo points)
+  Audit Trail:  http://localhost:5173/audit/EVAL-2024-001
+                Expect: 12 timestamped events, AI + officer actions, hashes
+
+  KTPP Report:  http://localhost:5173/report/EVAL-2024-001
+                Expect: Formal government-style report with all bid verdicts
+
+  Audit Log:    http://localhost:5173/audit-log/search
+                Expect: Searchable log of all past evaluations (read-only view)
+
+  User Mgmt:    http://localhost:5173/admin/users
+                Expect: Officer accounts table with roles
+
+
+KNOWN DEAD ELEMENTS (intentional, skip during demo)
+=====================================================
+  - Filter / Export Report / Pagination buttons (no logic)
+  - Save Draft in wizard (no save logic)
+  - Top nav "Tenders" and "Analytics" links
+  - Sidebar Settings / Logout (cosmetic)
+  - Bell / HelpCircle icons (panels open but no real data action)
+
+
+QUICK SANITY CHECKS
+====================
+  White page on any route?       → Hard refresh (Ctrl+Shift+R)
+  Back button shows white page?  → Navigate forward then back again;
+                                   if persists, reload the last good URL
+  Sign Off still disabled after  → Make sure BID-014 was submitted,
+  resolving BID-014?               check "Resolved" badge visible on dashboard

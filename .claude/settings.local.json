@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "PowerShell(npm *)",
+      "Bash(npm run *)",
+      "Bash(taskkill /F /IM node.exe)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell($env:PYTHONUTF8=1; cd \"C:\\\\Users\\\\Harshitha\\\\Desktop\\\\NEETHI AI\"; python _bmad/scripts/resolve_customization.py --skill \".claude/skills/bmad-agent-dev\" --key agent 2>&1)",
+      "Bash(sed -n '140,160p' \"C:\\\\Users\\\\Harshitha\\\\Desktop\\\\NEETHI AI\\\\neethi-ai\\\\src\\\\pages\\\\AuditLogSearch.jsx\")",
+      "Bash(sed -n '88,100p' \"C:\\\\Users\\\\Harshitha\\\\Desktop\\\\NEETHI AI\\\\neethi-ai\\\\src\\\\pages\\\\ProcessingError.jsx\")",
+      "Bash(sed -n '155,165p' \"C:\\\\Users\\\\Harshitha\\\\Desktop\\\\NEETHI AI\\\\neethi-ai\\\\src\\\\pages\\\\UserManagement.jsx\")",
+      "Bash(npx tsc *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/dashboard)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/evaluation/EVAL-2024-001)",
+      "Bash(node -e ' *)",
+      "Bash(xargs grep -l \"TopNavActions\")",
+      "Bash(New-Item *)",
+      "Bash(node *)",
+      "Bash(npm install *)",
+      "Bash(npm test *)"
+    ]
+  }
+}

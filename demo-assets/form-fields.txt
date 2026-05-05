@@ -1,0 +1,45 @@
+NEETHI AI — FORM FIELDS TO TYPE
+================================
+
+STEP 1: Upload Tender Document
+-------------------------------
+Tender Name:    NH-75 Bypass Road Construction
+Reference No:   KTPP-2024-INF-001
+PDF Upload:     use bid-document.pdf (printed from bid-document.txt)
+
+STEP 2: Upload Bid Documents
+------------------------------
+Bidder 1 (pre-filled): Hassan Infra          → upload bid-document.pdf
+Bidder 2 (pre-filled): Mysuru Urban          → upload bid-document.pdf
+
+  Optional — add more bidders via "+ Add Bidder":
+  Bidder 3 Name: Rajesh Infrastructure Pvt Ltd → upload bid-document.pdf
+
+  NOTE: Every bidder card must have at least 1 file uploaded
+        before "Continue to Review" button enables.
+
+STEP 3: Confirm Criteria
+-------------------------
+  Nothing to type — just review the 6 criteria shown, then click
+  "Start Evaluation"
+
+  6 criteria listed:
+    C1 - Annual Turnover >= Rs.5 Crore (3 consecutive years) [Mandatory]
+    C2 - Valid ISO 9001:2015 Certificate                     [Mandatory]
+    C3 - Karnataka PWD Class I Registration                  [Mandatory]
+    C4 - >= 5 years experience, >= Rs.10 Crore road projects [Mandatory]
+    C5 - Valid GSTIN (active)                                [Mandatory]
+    C6 - BLS Abolition Act compliance certificate            [Optional]
+
+MANUAL REVIEW STEP (BID-014)
+------------------------------
+Route:    /bid/BID-014/manual-review
+Decision: select any radio button (e.g. "Eligible — Override")
+Notes:    type anything (e.g. "Documents verified manually by officer")
+          Both fields required — Submit button stays disabled otherwise.
+
+SIGN OFF STEP
+--------------
+Route:    /evaluation/EVAL-2024-001/signoff
+Action:   Check the confirmation checkbox, then click
+          "Sign Off & Lock Evaluation"
