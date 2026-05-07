@@ -4,6 +4,7 @@ import {
   Scale, Clock, Globe, AlertTriangle, Gavel,
   ShieldCheck, FileText, Lock, ArrowRight, CheckCircle,
 } from 'lucide-react'
+import { useI18n } from '../context/I18nContext'
 
 // --- Animated stat counter ---
 function useCountUp(target: number, duration = 1400, active = false) {
@@ -91,6 +92,7 @@ const PIPELINE = ['Upload Bids', 'Extract Criteria', 'Parse Documents', 'AI Matc
 
 export default function LandingPage() {
   const navigate = useNavigate()
+  const { t, lang, setLang } = useI18n()
 
   // navbar shadow on scroll
   const [scrolled, setScrolled] = useState(false)
@@ -122,12 +124,30 @@ export default function LandingPage() {
           <Scale className="w-6 h-6 text-white" />
           <span className="text-xl font-black tracking-tighter">NEETHI AI</span>
         </div>
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="bg-white text-[#021934] px-4 py-2 font-bold text-xs uppercase tracking-tight hover:bg-slate-100 active:scale-95 transition-all duration-150 rounded"
-        >
-          Open Demo →
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-white/10 rounded-md p-0.5 border border-white/20" role="group" aria-label="Language toggle">
+            <button
+              onClick={() => setLang('en')}
+              className={`px-2 py-1 text-[11px] font-bold rounded transition-colors ${
+                lang === 'en' ? 'bg-white text-[#021934]' : 'text-white/70 hover:text-white'
+              }`}
+              aria-pressed={lang === 'en'}
+            >EN</button>
+            <button
+              onClick={() => setLang('kn')}
+              className={`px-2 py-1 text-[11px] font-bold rounded transition-colors ${
+                lang === 'kn' ? 'bg-white text-[#021934]' : 'text-white/70 hover:text-white'
+              }`}
+              aria-pressed={lang === 'kn'}
+            >ಕ</button>
+          </div>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="bg-white text-[#021934] px-4 py-2 font-bold text-xs uppercase tracking-tight hover:bg-slate-100 active:scale-95 transition-all duration-150 rounded"
+          >
+            {t('nav.openDemo')}
+          </button>
+        </div>
       </nav>
 
       {/* ── HERO ── */}
@@ -140,13 +160,13 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4">
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest">CRPF Hackathon 2024 — Theme 3</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">{t('land.badge')}</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tighter mb-5">
-            AI-Powered Tender Evaluation<br />for Karnataka Government
+            {t('land.heroTitle1')}<br />{t('land.heroTitle2')}
           </h1>
           <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            Seamlessly processing Kannada and English bids with full KTPP Act 2000 compliance.
+            {t('land.heroSub')}
           </p>
           <div className="flex flex-col items-center gap-3">
             <button
@@ -155,13 +175,13 @@ export default function LandingPage() {
               onMouseLeave={() => setCtaHover(false)}
               className="bg-white text-[#021934] px-10 py-4 font-bold text-lg hover:bg-slate-100 active:scale-95 transition-all duration-150 flex items-center gap-3 shadow-xl rounded"
             >
-              Open Officer Dashboard
+              {t('land.openOfficer')}
               <ArrowRight
                 className={`w-5 h-5 transition-transform duration-200 ${ctaHover ? 'translate-x-1' : ''}`}
               />
             </button>
             <p className="text-[10px] text-slate-400 uppercase tracking-widest">
-              Live demo — pre-loaded with Karnataka tender sample data
+              {t('land.liveDemo')}
             </p>
           </div>
         </div>

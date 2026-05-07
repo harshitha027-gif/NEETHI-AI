@@ -1,20 +1,27 @@
 import { useNavigate } from 'react-router-dom'
 import {
-  Scale, Bell, HelpCircle, LogOut, LayoutDashboard, Gavel, FileText,
+  Scale, LogOut, LayoutDashboard, Gavel,
   History, Settings, Plus, BarChart2, TrendingUp, Users, Activity
 } from 'lucide-react'
 import { CURRENT_USER } from '../data/mockData.ts'
 import TopNavActions from '../components/TopNavActions'
+import { useI18n } from '../context/I18nContext'
 
 const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Dashboard',       path: '/dashboard', active: false, disabled: false },
-  { icon: Gavel,           label: 'New Evaluation',  path: '/evaluation/new/step1', active: false, disabled: false },
-  { icon: FileText,        label: 'My Evaluations',  path: '#',          active: false, disabled: true },
-  { icon: History,         label: 'Audit Log',       path: '/audit-log/search', active: false, disabled: false },
+  { icon: LayoutDashboard, key: 'sidebar.dashboard', path: '/dashboard',            active: false },
+  { icon: Gavel,           key: 'sidebar.newEval',   path: '/evaluation/new/step1', active: false },
+  { icon: History,         key: 'sidebar.auditLog',  path: '/audit-log/search',     active: false },
+]
+
+const TOP_NAV = [
+  { key: 'topnav.dashboard', path: '/dashboard',        match: 'dashboard' },
+  { key: 'topnav.analytics', path: '/analytics',        match: 'analytics' },
+  { key: 'topnav.auditLog',  path: '/audit-log/search', match: 'audit'     },
 ]
 
 export default function Analytics() {
   const navigate = useNavigate()
+  const { t } = useI18n()
 
   return (
     <div className="min-h-screen bg-[#fbf9fb] font-['Inter'] text-[#1b1b1e] flex flex-col">
@@ -27,18 +34,18 @@ export default function Analytics() {
 
         <div className="flex items-center gap-6 h-full">
           <nav className="hidden md:flex gap-6 h-full items-center">
-            {['Dashboard', 'Tenders', 'Analytics', 'Audit Log'].map((item, i) => (
+            {TOP_NAV.map(item => (
               <a
-                key={item}
+                key={item.key}
                 href="#"
-                onClick={e => { e.preventDefault(); if (item === 'Dashboard') navigate('/dashboard'); else if (item === 'Tenders') navigate('/dashboard'); else if (item === 'Analytics') navigate('/analytics'); else if (item === 'Audit Log') navigate('/audit-log/search') }}
+                onClick={e => { e.preventDefault(); navigate(item.path) }}
                 className={`h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                  item === 'Analytics'
+                  item.match === 'analytics'
                     ? 'border-b-2 border-slate-900 text-slate-900'
                     : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
-                {item}
+                {t(item.key)}
               </a>
             ))}
           </nav>
@@ -61,46 +68,41 @@ export default function Analytics() {
               onClick={() => navigate('/evaluation/new/step1')}
               className="w-full bg-[#1A2E4A] text-white py-3 px-4 rounded flex items-center justify-center gap-2 font-bold text-sm hover:bg-[#021934] transition-all"
             >
-              <Plus className="w-4 h-4" /> New Evaluation
+              <Plus className="w-4 h-4" /> {t('sidebar.newEval')}
             </button>
           </div>
 
           <nav className="flex-1 px-3 space-y-0.5">
             {NAV_ITEMS.map(item => (
               <button
-                key={item.label}
+                key={item.key}
                 type="button"
-                onClick={() => {
-                  if (!item.disabled && item.path !== '#') navigate(item.path)
-                }}
-                disabled={item.disabled}
+                onClick={() => navigate(item.path)}
                 className={`w-full text-left flex items-center gap-3 px-4 py-3 font-semibold text-sm transition-all ${
-                  item.disabled
-                    ? 'text-slate-300 cursor-not-allowed'
-                    : item.active
+                  item.active
                     ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
                     : 'text-slate-600 hover:bg-slate-100 hover:pl-5 border-l-4 border-transparent'
                 }`}
               >
-                <item.icon className={`w-4 h-4 shrink-0 ${item.disabled ? 'opacity-40' : ''}`} />
-                {item.label}
+                <item.icon className="w-4 h-4 shrink-0" />
+                {t(item.key)}
               </button>
             ))}
           </nav>
 
           <div className="px-3 space-y-0.5 pt-4 border-t border-slate-200">
             {[
-              { icon: Settings, label: 'Settings', path: '/settings' },
-              { icon: LogOut,   label: 'Logout', path: '/' },
+              { icon: Settings, key: 'sidebar.settings', path: '/settings' },
+              { icon: LogOut,   key: 'sidebar.logout',   path: '/'         },
             ].map(item => (
               <button
-                key={item.label}
+                key={item.key}
                 type="button"
                 onClick={() => navigate(item.path)}
                 className="w-full text-left flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 hover:pl-5 font-semibold text-sm transition-all border-l-4 border-transparent"
               >
                 <item.icon className="w-4 h-4" />
-                {item.label}
+                {t(item.key)}
               </button>
             ))}
           </div>

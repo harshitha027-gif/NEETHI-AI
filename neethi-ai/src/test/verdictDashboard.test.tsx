@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { EvaluationStateProvider } from '../context/EvaluationStateContext'
+import { I18nProvider } from '../context/I18nContext'
 import VerdictDashboard from '../pages/VerdictDashboard'
 
 vi.mock('../components/TopNavActions', () => ({
@@ -12,9 +13,11 @@ vi.mock('../components/TopNavActions', () => ({
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <MemoryRouter initialEntries={['/evaluation/EVAL-2024-001']}>
-      <EvaluationStateProvider>
-        {children}
-      </EvaluationStateProvider>
+      <I18nProvider>
+        <EvaluationStateProvider>
+          {children}
+        </EvaluationStateProvider>
+      </I18nProvider>
     </MemoryRouter>
   )
 }

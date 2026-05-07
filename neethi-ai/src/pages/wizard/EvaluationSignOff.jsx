@@ -1,21 +1,12 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  CheckCircle2, Download, Lock, AlertTriangle, LayoutDashboard, Gavel, FileText,
-  CreditCard, BarChart2, ShieldCheck, Settings, LogOut, Bell, HelpCircle, User, Scale,
+  CheckCircle2, Download, Lock, AlertTriangle, Scale,
   FileText as FileIcon,
 } from 'lucide-react'
 import { CURRENT_USER } from '../../data/mockData'
 import TopNavActions from '../../components/TopNavActions'
-
-const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Overview' },
-  { icon: Gavel, label: 'Bid Evaluation' },
-  { icon: FileText, label: 'Technical Review' },
-  { icon: CreditCard, label: 'Financial Assessment' },
-  { icon: BarChart2, label: 'Comparative Statement' },
-  { icon: ShieldCheck, label: 'Award Decision' },
-]
+import AppSidebar from '../../components/AppSidebar'
 
 export default function EvaluationSignOff() {
   const navigate = useNavigate()
@@ -39,62 +30,11 @@ export default function EvaluationSignOff() {
           <Scale className="w-6 h-6 text-[#021934]" />
           <span className="text-xl font-black text-slate-900 tracking-tighter">NEETHI AI</span>
         </div>
-        <nav className="hidden md:flex gap-6">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Dashboard</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard') }} className="border-b-2 border-slate-900 text-slate-900 font-bold text-xs uppercase tracking-widest py-2 px-3">Tenders</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/analytics') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Analytics</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/audit-log/search') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Audit Log</a>
-        </nav>
         <TopNavActions />
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-[280px] flex flex-col py-6 bg-slate-50 border-r border-slate-200 shrink-0">
-          <div className="px-6 mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-white border border-slate-200 rounded flex items-center justify-center shrink-0">
-                <Scale className="w-6 h-6 text-[#021934]" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-slate-900">Government of Karnataka</h1>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Procurement Department</p>
-              </div>
-            </div>
-          </div>
-
-          <nav className="flex-1 px-4 space-y-1">
-            {NAV_ITEMS.map(({ icon: Icon, label }) => {
-              const active = label === 'Award Decision'
-              return (
-                <a
-                  key={label}
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); if (label === 'Overview') navigate('/dashboard'); else navigate(`/evaluation/${evaluationId}`) }}
-                  className={`flex items-center gap-3 px-3 py-2 rounded text-sm font-semibold transition-all ${
-                    active
-                      ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </a>
-              )
-            })}
-          </nav>
-
-          <div className="mt-auto px-4 border-t border-slate-200 pt-4 space-y-1">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/settings') }} className="flex items-center gap-3 px-4 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <Settings className="w-4 h-4" />
-              Settings
-            </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/') }} className="flex items-center gap-3 px-4 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <LogOut className="w-4 h-4" />
-              Logout
-            </a>
-          </div>
-        </aside>
+        <AppSidebar active="newEval" />
 
         {/* Main */}
         <main className="flex-1 p-8 pb-24 bg-slate-100">

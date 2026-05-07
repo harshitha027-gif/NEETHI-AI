@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import {
-  Scale, Bell, HelpCircle, Plus, LayoutDashboard, Gavel, FileText,
-  BarChart2, ShieldCheck, Settings, LogOut, Download, PenLine,
+  Scale, Download, PenLine,
   CheckCircle, XCircle, AlertTriangle, ChevronLeft, CheckSquare,
 } from 'lucide-react'
 import { BIDS, TENDER, CURRENT_USER } from '../data/mockData.ts'
 import { useEvaluationState } from '../context/EvaluationStateContext'
 import TopNavActions from '../components/TopNavActions'
+import AppSidebar from '../components/AppSidebar'
 
 type FilterKey = 'all' | 'eligible' | 'ineligible' | 'review'
 
@@ -86,14 +86,6 @@ const FILTERS: { key: FilterKey; label: string }[] = [
   { key: 'review',     label: 'Manual Review' },
 ]
 
-const SIDEBAR_NAV = [
-  { icon: LayoutDashboard, label: 'Overview',       active: false },
-  { icon: Gavel,           label: 'Bid Evaluation', active: true },
-  { icon: FileText,        label: 'Technical',      active: false },
-  { icon: BarChart2,       label: 'Financial',      active: false },
-  { icon: ShieldCheck,     label: 'Verdict',        active: false },
-]
-
 export default function VerdictDashboard() {
   const navigate = useNavigate()
   const { resolvedBids, realBids } = useEvaluationState()
@@ -118,18 +110,18 @@ export default function VerdictDashboard() {
           NEETHI AI
         </div>
         <nav className="hidden md:flex gap-6 h-full items-center">
-          {['Dashboard', 'Tenders', 'Analytics', 'Audit Log'].map((item, i) => (
+          {[
+            { label: 'Dashboard', path: '/dashboard'        },
+            { label: 'Analytics', path: '/analytics'        },
+            { label: 'Audit Log', path: '/audit-log/search' },
+          ].map(item => (
             <a
-              key={item}
+              key={item.label}
               href="#"
-              onClick={e => { e.preventDefault(); if (i === 0) navigate('/dashboard'); else if (i === 1) navigate('/dashboard'); else if (i === 2) navigate('/analytics'); else if (i === 3) navigate('/audit-log/search') }}
-              className={`h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                i === 1
-                  ? 'border-b-2 border-slate-900 text-slate-900'
-                  : 'text-slate-400 hover:text-slate-700'
-              }`}
+              onClick={e => { e.preventDefault(); navigate(item.path) }}
+              className="h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 transition-colors"
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </nav>
@@ -138,47 +130,7 @@ export default function VerdictDashboard() {
       </header>
 
       <div className="flex flex-1">
-
-        {/* ── SIDEBAR ── */}
-        <aside className="w-[260px] bg-slate-50 border-r border-slate-200 flex flex-col py-6 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto shrink-0">
-          <div className="px-4 mb-6">
-            <button onClick={() => navigate('/evaluation/new/step1')} className="w-full bg-[#1A2E4A] text-white py-2.5 px-4 flex items-center justify-center gap-2 font-bold text-sm active:scale-95 hover:bg-[#021934] transition-all duration-150 rounded">
-              <Plus className="w-4 h-4" /> New Evaluation
-            </button>
-          </div>
-
-          <nav className="flex-1 px-3 space-y-0.5">
-            {SIDEBAR_NAV.map(item => (
-              <a
-                key={item.label}
-                href="#"
-                onClick={e => { e.preventDefault(); if (item.label === 'Overview') navigate('/dashboard') }}
-                className={`flex items-center gap-3 px-4 py-3 font-semibold text-sm transition-all duration-200 ${
-                  item.active
-                    ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
-                    : 'text-slate-600 hover:bg-slate-100 hover:pl-5 border-l-4 border-transparent'
-                }`}
-              >
-                <item.icon className="w-4 h-4 shrink-0" />
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="px-3 pt-4 border-t border-slate-200 space-y-0.5">
-            {[{ icon: Settings, label: 'Settings' }, { icon: LogOut, label: 'Logout' }].map(item => (
-              <a
-                key={item.label}
-                href="#"
-                onClick={e => { e.preventDefault(); if (item.label === 'Settings') navigate('/settings'); if (item.label === 'Logout') navigate('/') }}
-                className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 font-semibold text-sm transition-colors border-l-4 border-transparent"
-              >
-                <item.icon className="w-4 h-4" />
-                {item.label}
-              </a>
-            ))}
-          </div>
-        </aside>
+        <AppSidebar />
 
         {/* ── MAIN ── */}
         <main className="flex-1 p-8 pb-24 overflow-x-hidden">

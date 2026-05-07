@@ -1,20 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Plus, Bell, HelpCircle, User, Settings, LogOut, LayoutDashboard, Gavel,
-  FileText, CreditCard, BarChart2, ShieldCheck, UserX, Edit2, Search,
+  UserX, User, Edit2, Search, Plus,
   Lock, X, ArrowRight, Scale
 } from 'lucide-react'
 import TopNavActions from '../components/TopNavActions'
-
-const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Overview' },
-  { icon: Gavel, label: 'Bid Evaluation' },
-  { icon: FileText, label: 'Technical Review' },
-  { icon: CreditCard, label: 'Financial Assessment' },
-  { icon: BarChart2, label: 'Comparative Statement' },
-  { icon: ShieldCheck, label: 'Award Decision' },
-]
+import AppSidebar from '../components/AppSidebar'
 
 const INITIAL_USERS = [
   {
@@ -117,12 +108,6 @@ export default function UserManagement() {
           <Scale className="w-6 h-6 text-[#021934]" />
           <span className="text-xl font-black text-slate-900 tracking-tighter">NEETHI AI</span>
         </div>
-        <nav className="hidden md:flex gap-6">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Dashboard</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Tenders</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/analytics') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Analytics</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/audit-log/search') }} className="text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 py-2 px-3">Audit Log</a>
-        </nav>
         <TopNavActions>
           <div className="bg-[#021934] text-white px-3 py-1 rounded-lg flex items-center gap-2">
             <span className="text-xs font-bold uppercase">System Administrator</span>
@@ -131,59 +116,7 @@ export default function UserManagement() {
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-[280px] flex flex-col py-6 bg-slate-50 border-r border-slate-200 shrink-0">
-          <div className="px-6 mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-white border border-slate-200 rounded flex items-center justify-center shrink-0">
-                <Scale className="w-6 h-6 text-[#021934]" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-slate-900">Government of Karnataka</h1>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Procurement Department</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-4 mb-6">
-            <button onClick={() => navigate('/evaluation/new/step1')} className="w-full bg-[#021934] text-white py-3 rounded-lg flex items-center justify-center gap-2 font-bold text-sm hover:bg-slate-800 transition-colors">
-              <Plus className="w-5 h-5" />
-              New Evaluation
-            </button>
-          </div>
-
-          <nav className="flex-1 space-y-1 px-2">
-            {NAV_ITEMS.map(({ icon: Icon, label }) => {
-              const active = label === 'Award Decision'
-              return (
-                <a
-                  key={label}
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); if (label === 'Overview') navigate('/dashboard'); else navigate('/evaluation/EVAL-2024-001') }}
-                  className={`flex items-center gap-3 px-3 py-2 rounded text-sm font-semibold transition-all ${
-                    active
-                      ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </a>
-              )
-            })}
-          </nav>
-
-          <div className="mt-auto px-2 pt-6 border-t border-slate-200 space-y-1">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/settings') }} className="flex items-center gap-3 px-3 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <Settings className="w-4 h-4" />
-              Settings
-            </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/') }} className="flex items-center gap-3 px-3 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <LogOut className="w-4 h-4" />
-              Logout
-            </a>
-          </div>
-        </aside>
+        <AppSidebar />
 
         {/* Main */}
         <main className="flex-1 p-8 pb-20 overflow-y-auto">

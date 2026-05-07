@@ -1,13 +1,15 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import {
-  Scale, Bell, LogOut, LayoutDashboard, Gavel, FileText,
-  History, Settings, Plus, Filter, Download, Search,
+  Scale, LogOut, LayoutDashboard, Gavel,
+  History, Settings, Plus, Search,
   RefreshCw, ClipboardCheck, CheckCircle2, Info, TrendingUp,
   Timer, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { CURRENT_USER } from '../data/mockData.ts'
 import TopNavActions from '../components/TopNavActions'
+import { useI18n } from '../context/I18nContext'
+import OnboardingTour from '../components/OnboardingTour'
 
 const EVALUATIONS = [
   {
@@ -59,15 +61,21 @@ const STATUS_CONFIG: Record<StatusKey, {
 }
 
 const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Dashboard',       path: '/dashboard', active: true,  disabled: false },
-  { icon: Gavel,           label: 'New Evaluation',  path: '#',          active: false, disabled: false },
-  { icon: FileText,        label: 'My Evaluations',  path: '#',          active: false, disabled: false },
-  { icon: History,         label: 'Audit Log',       path: '#',          active: false, disabled: true  },
+  { icon: LayoutDashboard, key: 'sidebar.dashboard', path: '/dashboard',            active: true  },
+  { icon: Gavel,           key: 'sidebar.newEval',   path: '/evaluation/new/step1', active: false },
+  { icon: History,         key: 'sidebar.auditLog',  path: '/audit-log/search',     active: false },
+]
+
+const TOP_NAV = [
+  { key: 'topnav.dashboard', path: '/dashboard',        match: 'dashboard' },
+  { key: 'topnav.analytics', path: '/analytics',        match: 'analytics' },
+  { key: 'topnav.auditLog',  path: '/audit-log/search', match: 'audit'     },
 ]
 
 export default function OfficerDashboard() {
   const navigate  = useNavigate()
   const [search, setSearch] = useState('')
+  const { t } = useI18n()
 
   const filtered = EVALUATIONS.filter(e =>
     e.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -81,13 +89,22 @@ export default function OfficerDashboard() {
   }
 
   function actionLabel(status: string) {
-    if (status === 'review')     return 'Start Review'
-    if (status === 'processing') return 'View Logs'
-    return 'Download Report'
+    if (status === 'review')     return t('dash.startReview')
+    if (status === 'processing') return t('dash.viewLogs')
+    return t('dash.downloadReport')
   }
+
+  const TOUR_STEPS = [
+    { titleKey: 'tour.welcome.title', bodyKey: 'tour.welcome.body', placement: 'center' },
+    { selector: '[data-tour="new-evaluation"]', titleKey: 'tour.newEval.title', bodyKey: 'tour.newEval.body', placement: 'right' },
+    { selector: '[data-tour="evaluations-table"]', titleKey: 'tour.evals.title', bodyKey: 'tour.evals.body', placement: 'top' },
+    { selector: '[data-tour="lang-toggle"]', titleKey: 'tour.lang.title', bodyKey: 'tour.lang.body', placement: 'bottom' },
+    { selector: '[data-tour="notifications"]', titleKey: 'tour.help.title', bodyKey: 'tour.help.body', placement: 'bottom' },
+  ]
 
   return (
     <div className="min-h-screen bg-[#fbf9fb] font-['Inter'] text-[#1b1b1e] flex flex-col">
+      <OnboardingTour steps={TOUR_STEPS} storageKey="neethi-tour-dashboard-v1" />
 
       {/* ── TOP BAR ── */}
       <header className="flex justify-between items-center w-full h-16 px-6 sticky top-0 bg-white border-b border-slate-200 z-40">
@@ -98,18 +115,18 @@ export default function OfficerDashboard() {
 
         <div className="flex items-center gap-6 h-full">
           <nav className="hidden md:flex gap-6 h-full items-center">
-            {['Dashboard', 'Tenders', 'Analytics', 'Audit Log'].map((item, i) => (
+            {TOP_NAV.map(item => (
               <a
-                key={item}
+                key={item.key}
                 href="#"
-                onClick={e => { e.preventDefault(); if (item === 'Dashboard') navigate('/dashboard'); else if (item === 'Tenders') navigate('/dashboard'); else if (item === 'Analytics') navigate('/analytics'); else if (item === 'Audit Log') navigate('/audit-log/search') }}
+                onClick={e => { e.preventDefault(); navigate(item.path) }}
                 className={`h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                  item === 'Dashboard'
+                  item.match === 'dashboard'
                     ? 'border-b-2 border-slate-900 text-slate-900'
                     : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
-                {item}
+                {t(item.key)}
               </a>
             ))}
           </nav>
@@ -131,38 +148,30 @@ export default function OfficerDashboard() {
           {/* New Evaluation button */}
           <div className="px-4 mb-6">
             <button
+              data-tour="new-evaluation"
               onClick={() => navigate('/evaluation/new/step1')}
               className="w-full bg-[#1A2E4A] text-white py-3 px-4 rounded flex items-center justify-center gap-2 font-bold text-sm active:scale-95 hover:bg-[#021934] transition-all duration-150"
             >
               <Plus className="w-4 h-4" />
-              New Evaluation
+              {t('sidebar.newEval')}
             </button>
           </div>
 
           {/* Nav links */}
-          <nav className="flex-1 px-3 space-y-0.5">
+          <nav className="flex-1 px-3 space-y-0.5" data-tour="sidebar-nav">
             {NAV_ITEMS.map(item => (
               <button
-                key={item.label}
+                key={item.key}
                 type="button"
-                onClick={() => {
-                  if (!item.disabled) {
-                    if (item.label === 'Dashboard') navigate('/dashboard')
-                    if (item.label === 'New Evaluation') navigate('/evaluation/new/step1')
-                    if (item.label === 'Audit Log') navigate('/audit-log/search')
-                  }
-                }}
-                disabled={item.disabled}
+                onClick={() => navigate(item.path)}
                 className={`w-full text-left flex items-center gap-3 px-4 py-3 font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                  item.disabled
-                    ? 'text-slate-300 cursor-not-allowed'
-                    : item.active
+                  item.active
                     ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
                     : 'text-slate-600 hover:bg-slate-100 hover:pl-5 border-l-4 border-transparent'
                 }`}
               >
-                <item.icon className={`w-4 h-4 shrink-0 ${item.disabled ? 'opacity-40' : ''}`} />
-                {item.label}
+                <item.icon className="w-4 h-4 shrink-0" />
+                {t(item.key)}
               </button>
             ))}
           </nav>
@@ -170,20 +179,17 @@ export default function OfficerDashboard() {
           {/* bottom links */}
           <div className="px-3 space-y-0.5 pt-4 border-t border-slate-200">
             {[
-              { icon: Settings, label: 'Settings' },
-              { icon: LogOut,   label: 'Logout'   },
+              { icon: Settings, key: 'sidebar.settings', path: '/settings' },
+              { icon: LogOut,   key: 'sidebar.logout',   path: '/'         },
             ].map(item => (
               <button
-                key={item.label}
+                key={item.key}
                 type="button"
-                onClick={() => {
-                  if (item.label === 'Settings') navigate('/settings')
-                  if (item.label === 'Logout') navigate('/')
-                }}
+                onClick={() => navigate(item.path)}
                 className="w-full text-left flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 hover:pl-5 font-semibold text-sm transition-all duration-200 border-l-4 border-transparent cursor-pointer"
               >
                 <item.icon className="w-4 h-4" />
-                {item.label}
+                {t(item.key)}
               </button>
             ))}
           </div>
@@ -196,17 +202,9 @@ export default function OfficerDashboard() {
           <div className="mb-8 flex justify-between items-end">
             <div>
               <h1 className="text-[30px] leading-[36px] font-bold tracking-tight text-slate-900">
-                Procurement Workspace
+                {t('dash.title')}
               </h1>
-              <p className="text-sm text-slate-500 mt-1">Institutional oversight for state-wide tender evaluations.</p>
-            </div>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-white border border-[#74777e] text-[#1b1b1e] font-semibold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors rounded">
-                <Filter className="w-3.5 h-3.5" /> Filter
-              </button>
-              <button className="px-4 py-2 bg-white border border-[#74777e] text-[#1b1b1e] font-semibold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors rounded">
-                <Download className="w-3.5 h-3.5" /> Export Report
-              </button>
+              <p className="text-sm text-slate-500 mt-1">{t('dash.subtitle')}</p>
             </div>
           </div>
 
@@ -215,23 +213,23 @@ export default function OfficerDashboard() {
             {/* Card 1 */}
             <div className="bg-white border border-slate-200 p-4 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-amber-500" />
-              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Attention Required</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">{t('dash.attentionReq')}</p>
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-3xl font-black text-slate-900">2</span>
-                <span className="text-sm font-semibold text-amber-600">Ready for Review</span>
+                <span className="text-sm font-semibold text-amber-600">{t('dash.readyForReview')}</span>
               </div>
               <p className="text-[10px] text-slate-400 mt-4 flex items-center gap-1">
                 <Info className="w-3 h-3" />
-                AI evaluation pass completed for these tenders.
+                {t('dash.aiPassDone')}
               </p>
             </div>
             {/* Card 2 */}
             <div className="bg-white border border-slate-200 p-4 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-green-600" />
-              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Monthly Performance</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">{t('dash.monthlyPerf')}</p>
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-3xl font-black text-slate-900">12</span>
-                <span className="text-sm font-semibold text-green-600">Completed This Month</span>
+                <span className="text-sm font-semibold text-green-600">{t('dash.completedThisMonth')}</span>
               </div>
               <p className="text-[10px] text-slate-400 mt-4 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -241,10 +239,10 @@ export default function OfficerDashboard() {
             {/* Card 3 */}
             <div className="bg-white border border-slate-200 p-4 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-slate-400" />
-              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Queue Status</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">{t('dash.queueStatus')}</p>
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-3xl font-black text-slate-900">1</span>
-                <span className="text-sm font-semibold text-slate-500">Processing</span>
+                <span className="text-sm font-semibold text-slate-500">{t('dash.processing')}</span>
               </div>
               <p className="text-[10px] text-slate-400 mt-4 flex items-center gap-1">
                 <Timer className="w-3 h-3" />
@@ -254,15 +252,15 @@ export default function OfficerDashboard() {
           </div>
 
           {/* Table */}
-          <div className="bg-white border border-slate-200">
+          <div className="bg-white border border-slate-200" data-tour="evaluations-table">
             {/* Table header */}
             <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <h3 className="text-lg font-semibold text-slate-900">Active Evaluations</h3>
+              <h3 className="text-lg font-semibold text-slate-900">{t('dash.activeEvals')}</h3>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                 <input
                   className="pl-9 pr-4 py-1.5 border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-[#1A2E4A] w-64 rounded"
-                  placeholder="Search tenders..."
+                  placeholder={t('dash.searchTenders')}
                   type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
@@ -275,7 +273,7 @@ export default function OfficerDashboard() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-100">
-                    {['Tender ID', 'Tender Name', 'Upload Date', 'Total Bids', 'Status', 'Action'].map((col, i) => (
+                    {[t('dash.col.tenderId'), t('dash.col.tenderName'), t('dash.col.uploadDate'), t('dash.col.totalBids'), t('dash.col.status'), t('dash.col.action')].map((col, i) => (
                       <th
                         key={col}
                         className={`px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-600 border-b border-slate-200 ${

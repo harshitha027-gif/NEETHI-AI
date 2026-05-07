@@ -1,21 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEvaluationWizard } from '../../context/EvaluationWizardContext'
-import {
-  Plus, Upload, ArrowRight, Info, LayoutDashboard, Gavel, FileText,
-  CreditCard, BarChart2, ShieldCheck, Settings, LogOut, Bell, HelpCircle, User, Scale,
-} from 'lucide-react'
+import { Upload, ArrowRight, Info, Scale, FileText } from 'lucide-react'
 import { TENDER } from '../../data/mockData'
 import TopNavActions from '../../components/TopNavActions'
-
-const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Overview' },
-  { icon: Gavel, label: 'Bid Evaluation' },
-  { icon: FileText, label: 'Technical Review' },
-  { icon: CreditCard, label: 'Financial Assessment' },
-  { icon: BarChart2, label: 'Comparative Statement' },
-  { icon: ShieldCheck, label: 'Award Decision' },
-]
+import AppSidebar from '../../components/AppSidebar'
 
 export default function Step1UploadTender() {
   const navigate = useNavigate()
@@ -75,52 +64,7 @@ export default function Step1UploadTender() {
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-[280px] flex flex-col py-6 bg-slate-50 border-r border-slate-200 shrink-0">
-          <div className="px-6 mb-8">
-            <div className="text-lg font-bold text-slate-900 mb-0.5">Government of Karnataka</div>
-            <p className="text-[10px] uppercase tracking-tighter text-slate-500">Procurement Department</p>
-          </div>
-
-          <div className="px-4 mb-6">
-            <button className="w-full bg-[#021934] text-white py-3 rounded font-bold flex items-center justify-center gap-2 hover:bg-[#1A2E4A] active:scale-95 transition-all">
-              <Plus className="w-4 h-4" />
-              New Evaluation
-            </button>
-          </div>
-
-          <nav className="flex-1 px-4 space-y-1">
-            {NAV_ITEMS.map(({ icon: Icon, label }) => {
-              const active = label === 'Bid Evaluation'
-              return (
-                <a
-                  key={label}
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); navigate('/dashboard') }}
-                  className={`flex items-center gap-3 px-4 py-3 rounded text-sm font-semibold transition-all ${
-                    active
-                      ? 'bg-slate-200 text-slate-900 border-l-4 border-slate-900'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </a>
-              )
-            })}
-          </nav>
-
-          <div className="mt-auto px-4 pt-4 border-t border-slate-200 space-y-1">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/settings') }} className="flex items-center gap-3 px-4 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <Settings className="w-4 h-4" />
-              Settings
-            </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/') }} className="flex items-center gap-3 px-4 py-2 rounded text-slate-600 text-sm font-semibold hover:bg-slate-100">
-              <LogOut className="w-4 h-4" />
-              Logout
-            </a>
-          </div>
-        </aside>
+        <AppSidebar active="newEval" />
 
         {/* Main */}
         <main className="flex-1 p-8 flex flex-col items-center bg-slate-100">

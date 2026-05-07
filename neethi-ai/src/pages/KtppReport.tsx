@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import {
   Scale, ArrowLeft, Download, Pencil,
-  LayoutDashboard, Gavel, FileText, CreditCard, BarChart2, ShieldCheck, Plus,
-  Bell, CheckCircle2, XCircle, AlertTriangle,
+  CheckCircle2, XCircle, AlertTriangle,
 } from 'lucide-react'
 import { TENDER, BIDS, CRITERIA, CURRENT_USER, AUDIT_TRAIL } from '../data/mockData'
 import TopNavActions from '../components/TopNavActions'
+import AppSidebar from '../components/AppSidebar'
+import { useI18n } from '../context/I18nContext'
 
 const REQUIRED_MAP: Record<string, string> = {
   C1: '₹5 Crore/year (3 consecutive years)',
@@ -36,19 +37,17 @@ function OfficialSeal() {
   )
 }
 
-const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Overview' },
-  { icon: Gavel,           label: 'Bid Evaluation' },
-  { icon: FileText,        label: 'Technical Review' },
-  { icon: CreditCard,      label: 'Financial Assessment' },
-  { icon: BarChart2,       label: 'Comparative Statement' },
-  { icon: ShieldCheck,     label: 'Award Decision' },
+const TOP_NAV = [
+  { key: 'topnav.dashboard', path: '/dashboard',        match: 'dashboard' },
+  { key: 'topnav.analytics', path: '/analytics',        match: 'analytics' },
+  { key: 'topnav.auditLog',  path: '/audit-log/search', match: 'audit'     },
 ]
 
 const NUM_WORDS = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen']
 
 export default function KtppReport() {
   const navigate = useNavigate()
+  const { t } = useI18n()
 
   const eligible   = BIDS.filter(b => b.verdict === 'eligible')
   const ineligible = BIDS.filter(b => b.verdict === 'ineligible')
@@ -71,18 +70,14 @@ export default function KtppReport() {
 
         <div className="flex items-center gap-6 h-full">
           <nav className="hidden md:flex gap-6 h-full items-center">
-            {['Dashboard', 'Tenders', 'Analytics', 'Audit Log'].map((item, i) => (
+            {TOP_NAV.map(item => (
               <a
-                key={item}
+                key={item.key}
                 href="#"
-                onClick={e => { e.preventDefault(); if (item === 'Dashboard') navigate('/dashboard'); else if (item === 'Tenders') navigate('/dashboard'); else if (item === 'Analytics') navigate('/analytics'); else if (item === 'Audit Log') navigate('/audit-log/search') }}
-                className={`h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                  item === ''
-                    ? 'border-b-2 border-slate-900 text-slate-900'
-                    : 'text-slate-400 hover:text-slate-700'
-                }`}
+                onClick={e => { e.preventDefault(); navigate(item.path) }}
+                className="h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 transition-colors"
               >
-                {item}
+                {t(item.key)}
               </a>
             ))}
           </nav>
@@ -99,48 +94,9 @@ export default function KtppReport() {
 
       <div className="flex flex-1">
 
-        {/* ── SIDEBAR ── */}
-        <aside className="print:hidden w-[260px] bg-slate-50 border-r border-slate-200 flex flex-col py-6 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto shrink-0">
-          <div className="px-4 mb-6">
-            <div className="bg-white border border-slate-200 rounded p-3">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Active Evaluation</p>
-              <p className="text-xs font-bold text-[#021934] leading-snug">{TENDER.title}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">{TENDER.evaluationId}</p>
-            </div>
-          </div>
-
-          <nav className="flex-1 px-3 space-y-0.5">
-            {NAV_ITEMS.map(({ icon: Icon, label }) => {
-              const active = label === 'Award Decision'
-              return (
-                <button
-                  key={label}
-                  onClick={() => {
-                    if (label === 'Bid Evaluation') navigate(`/evaluation/${TENDER.evaluationId}`)
-                    if (label === 'Overview') navigate('/dashboard')
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold rounded transition-all duration-150 text-left ${
-                    active
-                      ? 'bg-[#1A2E4A] text-white border-l-4 border-white'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  {label}
-                </button>
-              )
-            })}
-          </nav>
-
-          <div className="px-4 pt-4 border-t border-slate-200">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="w-full bg-[#021934] text-white py-2.5 px-4 rounded font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#1A2E4A] active:scale-95 transition-all"
-            >
-              <Plus className="w-4 h-4" /> New Evaluation
-            </button>
-          </div>
-        </aside>
+        <div className="print:hidden">
+          <AppSidebar />
+        </div>
 
         {/* ── MAIN ── */}
         <main className="flex-1 px-10 py-8 pb-20 print:p-0 print:bg-white">

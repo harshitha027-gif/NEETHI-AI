@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
-  Scale, Bell, HelpCircle, LayoutDashboard, Gavel, FileText,
-  BarChart2, ShieldCheck, Settings, LogOut, Search,
+  Scale, Search,
   Lock, Download, Share2, CheckCircle2, AlertTriangle,
   ChevronDown, ChevronUp, FileSpreadsheet,
 } from 'lucide-react'
 import { AUDIT_TRAIL, TENDER, CURRENT_USER } from '../data/mockData.ts'
 import TopNavActions from '../components/TopNavActions'
+import AppSidebar from '../components/AppSidebar'
 
 // ── Hash QR: deterministic grid from SHA hash ─────────────────────────────────
 function HashQR({ hash }: { hash: string }) {
@@ -57,15 +57,6 @@ function formatTs(ts: string) {
   return `${time} — ${date}`
 }
 
-const SIDEBAR_NAV = [
-  { icon: LayoutDashboard, label: 'Overview'             },
-  { icon: Gavel,           label: 'Bid Evaluation'       },
-  { icon: FileText,        label: 'Technical Review'     },
-  { icon: BarChart2,       label: 'Financial Assessment' },
-  { icon: BarChart2,       label: 'Comparative Statement'},
-  { icon: ShieldCheck,     label: 'Award Decision'       },
-]
-
 const FULL_HASH = '8f12a9c3e4b5d6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1'
 
 export default function AuditTrail() {
@@ -96,18 +87,22 @@ export default function AuditTrail() {
 
         <div className="flex items-center gap-6 h-full">
           <nav className="hidden md:flex gap-6 h-full items-center">
-            {['Dashboard', 'Tenders', 'Analytics', 'Audit Log'].map((item, i) => (
+            {[
+              { label: 'Dashboard', path: '/dashboard',        match: false },
+              { label: 'Analytics', path: '/analytics',        match: false },
+              { label: 'Audit Log', path: '/audit-log/search', match: true  },
+            ].map(item => (
               <a
-                key={item}
+                key={item.label}
                 href="#"
-                onClick={e => { e.preventDefault(); if (item === 'Dashboard') navigate('/dashboard'); else if (item === 'Tenders') navigate('/dashboard'); else if (item === 'Analytics') navigate('/analytics'); else if (item === 'Audit Log') navigate('/audit-log/search') }}
+                onClick={e => { e.preventDefault(); navigate(item.path) }}
                 className={`h-full flex items-center px-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                  item === 'Audit Log'
+                  item.match
                     ? 'border-b-2 border-slate-900 text-slate-900'
                     : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </nav>
@@ -117,32 +112,7 @@ export default function AuditTrail() {
       </header>
 
       <div className="flex flex-1">
-
-        {/* ── SIDEBAR ── */}
-        <aside className="w-[260px] bg-slate-50 border-r border-slate-200 flex flex-col py-6 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto shrink-0">
-          <nav className="flex-1 px-3 space-y-0.5">
-            {SIDEBAR_NAV.map(item => (
-              <a key={item.label} href="#"
-                onClick={e => { e.preventDefault(); if (item.label === 'Overview') navigate('/dashboard') }}
-                className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 font-semibold text-sm transition-all duration-200 border-l-4 border-transparent hover:pl-5"
-              >
-                <item.icon className="w-4 h-4 shrink-0" />
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <div className="px-3 pt-4 border-t border-slate-200 space-y-0.5">
-            {[{ icon: Settings, label: 'Settings' }, { icon: LogOut, label: 'Logout' }].map(item => (
-              <a key={item.label} href="#"
-                onClick={e => { e.preventDefault(); if (item.label === 'Settings') navigate('/settings'); if (item.label === 'Logout') navigate('/') }}
-                className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 font-semibold text-sm transition-colors border-l-4 border-transparent"
-              >
-                <item.icon className="w-4 h-4" />
-                {item.label}
-              </a>
-            ))}
-          </div>
-        </aside>
+        <AppSidebar active="auditLog" />
 
         {/* ── MAIN ── */}
         <main className="flex-1 px-8 pt-8 pb-20 overflow-x-hidden">

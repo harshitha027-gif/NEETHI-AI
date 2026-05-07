@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { EvaluationWizardProvider } from './context/EvaluationWizardContext'
 import { EvaluationStateProvider } from './context/EvaluationStateContext'
+import { I18nProvider } from './context/I18nContext'
 import LandingPage from './pages/LandingPage.tsx'
 import OfficerDashboard from './pages/OfficerDashboard.tsx'
 import VerdictDashboard from './pages/VerdictDashboard.tsx'
@@ -23,6 +24,7 @@ import Settings from './pages/Settings.tsx'
 
 export default function App() {
   return (
+    <I18nProvider>
     <EvaluationStateProvider>
     <EvaluationWizardProvider>
     <BrowserRouter>
@@ -50,5 +52,6 @@ export default function App() {
     </BrowserRouter>
     </EvaluationWizardProvider>
     </EvaluationStateProvider>
+    </I18nProvider>
   )
 }

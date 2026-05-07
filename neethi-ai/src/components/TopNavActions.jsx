@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, HelpCircle, User, FileText, Phone, Activity, X } from 'lucide-react'
+import { Bell, HelpCircle, User, FileText, Phone, Activity, X, Compass } from 'lucide-react'
+import { useI18n } from '../context/I18nContext'
 
 const NOTIFICATIONS = [
   { id: 1, text: 'Evaluation complete for KPN/2024/7742', time: '10m ago', unread: true },
@@ -11,7 +12,8 @@ export default function TopNavActions({ children }) {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [notifications, setNotifications] = useState(NOTIFICATIONS)
-  
+  const { lang, setLang } = useI18n()
+
   const notifRef = useRef(null)
   const helpRef = useRef(null)
 
@@ -38,8 +40,47 @@ export default function TopNavActions({ children }) {
     <div className="flex items-center gap-4 relative z-50">
       {children}
 
+      {/* Language Toggle */}
+      <div
+        data-tour="lang-toggle"
+        className="flex items-center bg-slate-100 rounded-md p-0.5 border border-slate-200"
+        role="group"
+        aria-label="Language toggle"
+      >
+        <button
+          onClick={() => setLang('en')}
+          className={`px-2 py-1 text-[11px] font-bold rounded transition-colors ${
+            lang === 'en' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+          }`}
+          aria-pressed={lang === 'en'}
+          title="English"
+        >
+          EN
+        </button>
+        <button
+          onClick={() => setLang('kn')}
+          className={`px-2 py-1 text-[11px] font-bold rounded transition-colors ${
+            lang === 'kn' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+          }`}
+          aria-pressed={lang === 'kn'}
+          title="ಕನ್ನಡ"
+        >
+          ಕ
+        </button>
+      </div>
+
+      {/* Tour Restart */}
+      <button
+        onClick={() => window.dispatchEvent(new CustomEvent('neethi:start-tour'))}
+        className="p-1.5 rounded-md hover:bg-slate-50 transition-colors group"
+        title={lang === 'kn' ? 'ಟೂರ್ ಆರಂಭಿಸಿ' : 'Replay tour'}
+        aria-label="Replay tour"
+      >
+        <Compass className="w-5 h-5 text-slate-600 group-hover:text-blue-600 transition-colors" />
+      </button>
+
       {/* Notifications */}
-      <div className="relative" ref={notifRef}>
+      <div className="relative" ref={notifRef} data-tour="notifications">
         <button 
           onClick={() => { setShowNotifications(!showNotifications); setShowHelp(false) }}
           className={`relative p-1.5 rounded-md transition-colors ${showNotifications ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
