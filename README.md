@@ -1,6 +1,6 @@
 # NEETHI AI — Neural Evaluation Engine for Transparent & Honest Inquiry
 
-**Live Demo:** [https://shiny-piroshki-8c98b3.netlify.app/](https://shiny-piroshki-8c98b3.netlify.app/)
+**Live Demo:** [https://preeminent-parfait-639193.netlify.app/](https://preeminent-parfait-639193.netlify.app/))
 
 ---
 
